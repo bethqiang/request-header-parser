@@ -6,8 +6,14 @@ const chalk = require('chalk');
 app.get('/', (req, res, next) => res.sendFile(path.join(__dirname, '/index.html')));
 
 app.get('/api/whoami', (req, res, next) => {
+
+  const ip = req.headers['x-forwarded-for'] ||
+    req.connection.remoteAddress ||
+    req.socket.remoteAddress ||
+    req.connection.socket.remoteAddress;
+
   res.json({
-    ipaddress: req.ip,
+    ipaddress: ip,
     language: req.headers['accept-language'].split(',')[0],
     software: req.headers['user-agent'].split(') ')[0].split(' (')[1]
   });
